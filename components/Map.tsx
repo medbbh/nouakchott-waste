@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useCallback } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { Report, CATEGORY_COLORS, ReportCategory } from '@/types';
+import { Report, CATEGORY_COLORS } from '@/types';
 import { supabase } from '@/lib/supabase';
 
 const NOUAKCHOTT_CENTER: [number, number] = [-15.9785, 18.0858];

@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Camera, RotateCcw, X, ZoomIn } from 'lucide-react';
-import { useTranslations } from 'next-intl';
+import { RotateCcw, X } from 'lucide-react';
 
 interface CameraCaptureProps {
   onCapture: (file: File, coords: { latitude: number; longitude: number } | null) => void;
@@ -10,7 +9,6 @@ interface CameraCaptureProps {
 }
 
 export default function CameraCapture({ onCapture, onClose }: CameraCaptureProps) {
-  const t = useTranslations('report');
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
   const [ready, setReady] = useState(false);

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
-import { Trash2, Archive, Truck, CircleHelp, MapPin, CheckCircle, XCircle, X } from 'lucide-react';
+import { Trash2, Archive, Truck, CircleHelp, CheckCircle, XCircle, X } from 'lucide-react';
 import dynamic from 'next/dynamic';
 import { ReportCategory } from '@/types';
 import { compressImage } from '@/lib/imageUtils';
