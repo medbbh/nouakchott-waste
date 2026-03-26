@@ -1,6 +1,7 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
+import { Analytics } from '@vercel/analytics/next';
 import { FingerprintProvider } from '@/context/FingerprintContext';
 
 const locales = ['en', 'fr', 'ar'];
@@ -29,6 +30,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
             {children}
           </FingerprintProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   );
