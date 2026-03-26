@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "title": "Nouakchott Reports"
+  },
+  "report": {
+    "button": "Report",
+    "title": "Report a Dump",
+    "step_photo": "Take a Photo",
+    "step_category": "Category",
+    "step_details": "Details",
+    "take_photo": "Take Photo",
+    "retake": "Retake",
+    "category_dump": "Illegal Dump",
+    "category_overflow": "Full Dumpster",
+    "category_uncollected": "Missed Collection",
+    "category_other": "Other",
+    "description_placeholder": "Optional description...",
+    "submit": "Submit Report",
+    "submitting": "Submitting...",
+    "success": "Report submitted!",
+    "error_location": "Could not get location. Please enable location access and try again.",
+    "error_photo": "Please take a photo first.",
+    "error_category": "Please select a category.",
+    "error_submit": "Submission failed. Please try again.",
+    "location_detecting": "Detecting location...",
+    "location_found": "Location found",
+    "location_failed": "Location failed"
+  },
+  "detail": {
+    "reported": "Reported",
+    "neighborhood": "Neighborhood",
+    "status_open": "Open",
+    "status_resolved": "Resolved",
+    "upvote": "Upvote",
+    "upvoted": "Upvoted",
+    "share": "Share",
+    "copy_link": "Copy Link",
+    "copied": "Copied!",
+    "share_facebook": "Facebook",
+    "share_whatsapp": "WhatsApp"
+  },
+  "categories": {
+    "dump": "Illegal Dump",
+    "overflow": "Full Dumpster",
+    "uncollected": "Missed Collection",
+    "other": "Other"
+  },
+  "map": {
+    "loading": "Loading map...",
+    "no_reports": "No reports yet. Be the first to report!",
+    "reports_label": "reports"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again."
+  }
+}

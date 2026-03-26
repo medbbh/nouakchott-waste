@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "title": "Signalements Nouakchott"
+  },
+  "report": {
+    "button": "Signaler",
+    "title": "Signaler un Dépôt",
+    "step_photo": "Prendre une Photo",
+    "step_category": "Catégorie",
+    "step_details": "Détails",
+    "take_photo": "Prendre Photo",
+    "retake": "Reprendre",
+    "category_dump": "Dépôt Sauvage",
+    "category_overflow": "Poubelle Pleine",
+    "category_uncollected": "Collecte Manquée",
+    "category_other": "Autre",
+    "description_placeholder": "Description optionnelle...",
+    "submit": "Soumettre le Signalement",
+    "submitting": "Envoi en cours...",
+    "success": "Signalement envoyé!",
+    "error_location": "Impossible d'obtenir la localisation. Veuillez activer la géolocalisation et réessayer.",
+    "error_photo": "Veuillez prendre une photo.",
+    "error_category": "Veuillez sélectionner une catégorie.",
+    "error_submit": "Échec de l'envoi. Veuillez réessayer.",
+    "location_detecting": "Détection de la position...",
+    "location_found": "Position trouvée",
+    "location_failed": "Échec de la localisation"
+  },
+  "detail": {
+    "reported": "Signalé",
+    "neighborhood": "Quartier",
+    "status_open": "Ouvert",
+    "status_resolved": "Résolu",
+    "upvote": "Voter",
+    "upvoted": "Voté",
+    "share": "Partager",
+    "copy_link": "Copier le lien",
+    "copied": "Copié!",
+    "share_facebook": "Facebook",
+    "share_whatsapp": "WhatsApp"
+  },
+  "categories": {
+    "dump": "Dépôt Sauvage",
+    "overflow": "Poubelle Pleine",
+    "uncollected": "Collecte Manquée",
+    "other": "Autre"
+  },
+  "map": {
+    "loading": "Chargement de la carte...",
+    "no_reports": "Aucun signalement. Soyez le premier!",
+    "reports_label": "signalements"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer."
+  }
+}

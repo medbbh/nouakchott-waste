@@ -1,0 +1,56 @@
+{
+  "nav": {
+    "title": "بلاغات نواكشوط"
+  },
+  "report": {
+    "button": "إبلاغ",
+    "title": "الإبلاغ عن نفايات",
+    "step_photo": "التقط صورة",
+    "step_category": "الفئة",
+    "step_details": "التفاصيل",
+    "take_photo": "التقط صورة",
+    "retake": "إعادة التصوير",
+    "category_dump": "مكب غير قانوني",
+    "category_overflow": "قمامة ممتلئة",
+    "category_uncollected": "جمع متأخر",
+    "category_other": "أخرى",
+    "description_placeholder": "وصف اختياري...",
+    "submit": "إرسال البلاغ",
+    "submitting": "جاري الإرسال...",
+    "success": "تم إرسال البلاغ!",
+    "error_location": "تعذّر تحديد الموقع. يرجى تفعيل خدمة الموقع والمحاولة مجدداً.",
+    "error_photo": "يرجى التقاط صورة أولاً.",
+    "error_category": "يرجى اختيار فئة.",
+    "error_submit": "فشل الإرسال. يرجى المحاولة مجدداً.",
+    "location_detecting": "جاري تحديد الموقع...",
+    "location_found": "تم تحديد الموقع",
+    "location_failed": "فشل تحديد الموقع"
+  },
+  "detail": {
+    "reported": "تم الإبلاغ",
+    "neighborhood": "الحي",
+    "status_open": "مفتوح",
+    "status_resolved": "محلول",
+    "upvote": "دعم",
+    "upvoted": "تم الدعم",
+    "share": "مشاركة",
+    "copy_link": "نسخ الرابط",
+    "copied": "تم النسخ!",
+    "share_facebook": "فيسبوك",
+    "share_whatsapp": "واتساب"
+  },
+  "categories": {
+    "dump": "مكب غير قانوني",
+    "overflow": "حاوية ممتلئة",
+    "uncollected": "جمع متأخر",
+    "other": "أخرى"
+  },
+  "map": {
+    "loading": "جاري تحميل الخريطة...",
+    "no_reports": "لا توجد بلاغات بعد. كن أول من يبلّغ!",
+    "reports_label": "بلاغات"
+  },
+  "errors": {
+    "generic": "حدث خطأ. يرجى المحاولة مجدداً."
+  }
+}

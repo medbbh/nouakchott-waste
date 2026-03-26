@@ -11,6 +11,12 @@ const config: Config = {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        category: {
+          dump: "#C4572A",
+          overflow: "#E8A838",
+          uncollected: "#5C6B3A",
+          other: "#8A7F6E",
+        },
       },
     },
   },
