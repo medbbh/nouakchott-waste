@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
-const APP_URL = 'https://nouakchott-waste.vercel.app';
+const APP_URL = 'https://nkc-waste.vercel.app';
 const TITLE = 'nktt-waste — Waste Reporting in Nouakchott';
 const DESCRIPTION =
   'nktt-waste is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections in Nouakchott, Mauritania. Take a photo, pin the location, and hold ARMA Holding accountable.';

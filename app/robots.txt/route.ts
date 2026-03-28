@@ -14,7 +14,7 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://nouakchott-waste.vercel.app/sitemap.xml
+Sitemap: https://nkc-waste.vercel.app/sitemap.xml
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain' } });
 }

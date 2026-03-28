@@ -5,7 +5,7 @@ import { Analytics } from '@vercel/analytics/next';
 import { FingerprintProvider } from '@/context/FingerprintContext';
 
 const locales = ['en', 'fr', 'ar'];
-const APP_URL = 'https://nouakchott-waste.vercel.app';
+const APP_URL = 'https://nkc-waste.vercel.app';
 
 const jsonLd = {
   '@context': 'https://schema.org',
