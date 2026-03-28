@@ -1,9 +1,10 @@
 'use client';
 
-import { useEffect, useRef, useCallback } from 'react';
+import { useEffect, useRef, useCallback, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
 import { Report, CATEGORY_COLORS } from '@/types';
 import { supabase } from '@/lib/supabase';
+import { useTranslations } from 'next-intl';
 
 const NOUAKCHOTT_CENTER: [number, number] = [-15.9785, 18.0858];
 const DOT_SIZE = 80;
@@ -87,6 +88,9 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const reportsRef = useRef<Report[]>(reports);
+  const [stackedReports, setStackedReports] = useState<Report[]>([]);
+  const tc = useTranslations('categories');
+  const t = useTranslations('map');
 
   useEffect(() => {
     reportsRef.current = reports;
@@ -193,19 +197,22 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
         },
       });
 
-      // Cluster click → zoom in
+      // Cluster click → zoom in, or show picker if already at max zoom
       m.on('click', 'clusters', (e) => {
         const features = m.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-        const clusterId = features[0]?.properties?.cluster_id;
-        if (!clusterId) return;
-        (m.getSource('reports') as mapboxgl.GeoJSONSource).getClusterExpansionZoom(
-          clusterId,
-          (err, zoom) => {
-            if (err) return;
-            const coords = (features[0].geometry as GeoJSON.Point).coordinates as [number, number];
-            m.easeTo({ center: coords, zoom: zoom ?? 14 });
-          },
-        );
+        const feature = features[0];
+        if (!feature) return;
+        const clusterId = feature.properties?.cluster_id;
+        const source = m.getSource('reports') as mapboxgl.GeoJSONSource;
+        const coords = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
+
+        // Always show picker — no zoom confusion on mobile
+        source.getClusterLeaves(clusterId, 20, 0, (err, leaves) => {
+          if (err || !leaves) return;
+          const ids = leaves.map((f) => f.properties?.id as string);
+          const stacked = reportsRef.current.filter((r) => ids.includes(r.id));
+          setStackedReports(stacked);
+        });
       });
 
       // Pin click → open detail modal
@@ -252,5 +259,56 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
     source?.setData(buildGeoJSON(reports));
   }, [reports, buildGeoJSON]);
 
-  return <div ref={mapContainer} className="w-full h-full" />;
+  return (
+    <div className="relative w-full h-full">
+      <div ref={mapContainer} className="w-full h-full" />
+
+      {stackedReports.length > 0 && (
+        <div className="absolute inset-0 z-20 flex items-end justify-center">
+          <div
+            className="absolute inset-0 bg-black/30"
+            onClick={() => setStackedReports([])}
+          />
+          <div className="relative w-full max-w-md bg-white rounded-t-2xl shadow-2xl p-4 pb-8">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-semibold text-gray-700">
+                {stackedReports.length} {t('reports_at_location')}
+              </p>
+              <button
+                onClick={() => setStackedReports([])}
+                className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
+              >
+                ×
+              </button>
+            </div>
+            <div className="space-y-2 max-h-60 overflow-y-auto">
+              {stackedReports.map((r) => (
+                <button
+                  key={r.id}
+                  onClick={() => { setStackedReports([]); onReportClick(r); }}
+                  className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors text-left"
+                >
+                  <img
+                    src={r.photo_url}
+                    alt=""
+                    className="w-12 h-12 rounded-lg object-cover shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-gray-800">{tc(r.category)}</p>
+                    <p className="text-xs text-gray-400 truncate">
+                      {r.neighborhood ?? new Date(r.created_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div
+                    className="w-2.5 h-2.5 rounded-full shrink-0"
+                    style={{ backgroundColor: CATEGORY_COLORS[r.category] }}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

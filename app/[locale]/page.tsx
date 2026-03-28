@@ -9,6 +9,9 @@ import { Report } from '@/types';
 import { fetchReports, fetchReport } from '@/lib/supabase';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
+// Kick off reports fetch immediately at module load — runs before React mounts
+const reportsPromise = typeof window !== 'undefined' ? import('@/lib/supabase').then(m => m.fetchReports()) : Promise.resolve([]);
+
 // Load map without SSR (Mapbox requires browser)
 const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 const ReportModal = dynamic(() => import('@/components/ReportModal'), { ssr: false });
@@ -24,9 +27,9 @@ function PageContent() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [successToast, setSuccessToast] = useState(false);
 
-  // Initial load
+  // Initial load — uses the already-in-flight promise
   useEffect(() => {
-    fetchReports()
+    reportsPromise
       .then(setReports)
       .catch(console.error)
       .finally(() => setLoading(false));

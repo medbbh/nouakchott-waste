@@ -48,7 +48,8 @@
   "map": {
     "loading": "Loading map...",
     "no_reports": "No reports yet. Be the first to report!",
-    "reports_label": "reports"
+    "reports_label": "reports",
+    "reports_at_location": "reports at this location"
   },
   "errors": {
     "generic": "Something went wrong. Please try again."

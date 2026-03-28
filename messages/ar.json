@@ -48,7 +48,8 @@
   "map": {
     "loading": "جاري تحميل الخريطة...",
     "no_reports": "لا توجد بلاغات بعد. كن أول من يبلّغ!",
-    "reports_label": "بلاغات"
+    "reports_label": "بلاغات",
+    "reports_at_location": "بلاغات في هذا الموقع"
   },
   "errors": {
     "generic": "حدث خطأ. يرجى المحاولة مجدداً."

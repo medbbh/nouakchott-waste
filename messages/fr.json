@@ -48,7 +48,8 @@
   "map": {
     "loading": "Chargement de la carte...",
     "no_reports": "Aucun signalement. Soyez le premier!",
-    "reports_label": "signalements"
+    "reports_label": "signalements",
+    "reports_at_location": "signalements à cet endroit"
   },
   "errors": {
     "generic": "Une erreur s'est produite. Veuillez réessayer."

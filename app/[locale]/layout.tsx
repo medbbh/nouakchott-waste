@@ -23,6 +23,10 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <head>
         {/* eslint-disable-next-line @next/next/no-css-tags */}
         <link rel="stylesheet" href="/mapbox-gl.css" />
+        <link rel="preconnect" href="https://api.mapbox.com" />
+        <link rel="preconnect" href="https://events.mapbox.com" />
+        <link rel="dns-prefetch" href="https://a.tiles.mapbox.com" />
+        <link rel="dns-prefetch" href="https://b.tiles.mapbox.com" />
       </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
