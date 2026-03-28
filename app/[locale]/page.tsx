@@ -92,7 +92,8 @@ function PageContent() {
           </span>
           {!loading && reports.length > 0 && (
             <span className="bg-orange-500/90 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow flex items-center gap-1">
-              {reports.length} {t('map.reports_label')}
+              {reports.length}
+              <span className="hidden sm:inline">{t('map.reports_label')}</span>
             </span>
           )}
         </div>
