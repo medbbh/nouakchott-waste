@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Camera, Leaf } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Report } from '@/types';
-import { fetchReports, fetchReport } from '@/lib/supabase';
+import { fetchReport } from '@/lib/supabase';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 // Kick off reports fetch immediately at module load — runs before React mounts

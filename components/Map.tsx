@@ -204,8 +204,6 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
         if (!feature) return;
         const clusterId = feature.properties?.cluster_id;
         const source = m.getSource('reports') as mapboxgl.GeoJSONSource;
-        const coords = (feature.geometry as GeoJSON.Point).coordinates as [number, number];
-
         // Always show picker — no zoom confusion on mobile
         source.getClusterLeaves(clusterId, 20, 0, (err, leaves) => {
           if (err || !leaves) return;
