@@ -1,0 +1,38 @@
+# nktt-waste — Waste Reporting App for Nouakchott, Mauritania
+
+## What is nktt-waste?
+
+nktt-waste (nktt-waste) is a free, open civic web application (PWA) that allows citizens of Nouakchott, Mauritania to report illegal waste dumps, overflowing garbage bins, and missed waste collections.
+
+## How it works
+
+1. A citizen opens the app in their mobile browser (no installation required)
+2. They tap "Report" and take a live photo using the in-app camera
+3. The app captures GPS coordinates automatically from EXIF data or the device geolocation API
+4. The citizen selects a category: Illegal Dump, Full Dumpster, Missed Collection, or Other
+5. The report is submitted and appears as a real-time pin on the public map
+6. Other citizens can upvote reports to signal priority
+7. Reports can be shared via WhatsApp, Facebook, or direct link
+
+## Purpose
+
+To create a real-time accountability layer between Nouakchott citizens and the city's waste contractor, ARMA Holding.
+
+## Technology
+
+- Frontend: Next.js 14, Tailwind CSS, Mapbox GL JS
+- Backend: Supabase (PostgreSQL + PostGIS + Storage)
+- Languages: French (default), Arabic (RTL), English
+- Works as a Progressive Web App (PWA) — installable from the browser
+
+## Coverage
+
+City: Nouakchott, Mauritania
+Coordinates: 18.0858° N, 15.9785° W
+
+## Categories
+
+- **Illegal Dump** (Dépôt sauvage / مكب غير قانوني): Trash dumped in open public spaces
+- **Full Dumpster** (Poubelle pleine / قمامة ممتلئة): Public bin or dumpster that is overflowing
+- **Missed Collection** (Collecte manquée / جمع متأخر): Scheduled garbage truck did not collect
+- **Other** (Autre / أخرى): Any other waste-related issue

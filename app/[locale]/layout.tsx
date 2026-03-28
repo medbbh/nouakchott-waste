@@ -5,6 +5,40 @@ import { Analytics } from '@vercel/analytics/next';
 import { FingerprintProvider } from '@/context/FingerprintContext';
 
 const locales = ['en', 'fr', 'ar'];
+const APP_URL = 'https://nouakchott-waste.vercel.app';
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: 'nktt-waste',
+  url: APP_URL,
+  description:
+    'Civic waste reporting PWA for Nouakchott, Mauritania. Citizens report illegal dumps, overflowing bins, and missed garbage collections by taking a photo. Reports appear as real-time pins on a public map to hold ARMA Holding accountable.',
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Any',
+  browserRequirements: 'Requires JavaScript. Works on all modern mobile browsers.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+  inLanguage: ['fr', 'ar', 'en'],
+  availableLanguage: [
+    { '@type': 'Language', name: 'French', alternateName: 'fr' },
+    { '@type': 'Language', name: 'Arabic', alternateName: 'ar' },
+    { '@type': 'Language', name: 'English', alternateName: 'en' },
+  ],
+  spatialCoverage: {
+    '@type': 'Place',
+    name: 'Nouakchott, Mauritania',
+    geo: { '@type': 'GeoCoordinates', latitude: 18.0858, longitude: -15.9785 },
+  },
+  featureList: [
+    'Report illegal waste dumps with photo evidence',
+    'GPS location from EXIF or geolocation',
+    'Real-time map with clustered report pins',
+    'Upvote reports to signal priority',
+    'Share reports via WhatsApp and Facebook',
+    'Works offline as a PWA',
+    'Available in French, Arabic, and English',
+  ],
+};
 
 interface LocaleLayoutProps {
   children: React.ReactNode;
@@ -27,6 +61,11 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
         <link rel="preconnect" href="https://events.mapbox.com" />
         <link rel="dns-prefetch" href="https://a.tiles.mapbox.com" />
         <link rel="dns-prefetch" href="https://b.tiles.mapbox.com" />
+        <link rel="canonical" href={`${APP_URL}/${locale}`} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
       </head>
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
