@@ -8,6 +8,7 @@ import { useSearchParams } from 'next/navigation';
 import { Report } from '@/types';
 import { fetchReport } from '@/lib/supabase';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
+import WelcomeScreen from '@/components/WelcomeScreen';
 
 // Kick off reports fetch immediately at module load — runs before React mounts
 const reportsPromise = typeof window !== 'undefined' ? import('@/lib/supabase').then(m => m.fetchReports()) : Promise.resolve([]);
@@ -156,6 +157,8 @@ function PageContent() {
           onUpvoted={handleUpvoted}
         />
       )}
+
+      <WelcomeScreen />
     </div>
   );
 }

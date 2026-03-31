@@ -53,5 +53,13 @@
   },
   "errors": {
     "generic": "Une erreur s'est produite. Veuillez réessayer."
+  },
+  "welcome": {
+    "title": "Bienvenue sur 0Déchets",
+    "subtitle": "Signalez les dépôts sauvages et les poubelles pleines à Nouakchott — en quelques secondes.",
+    "step1": "Prenez une photo",
+    "step2": "On localise automatiquement",
+    "step3": "La ville est informée",
+    "cta": "Commencer"
   }
 }

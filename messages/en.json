@@ -53,5 +53,13 @@
   },
   "errors": {
     "generic": "Something went wrong. Please try again."
+  },
+  "welcome": {
+    "title": "Welcome to 0Déchets",
+    "subtitle": "Report illegal dumps and overflowing bins in Nouakchott — in seconds.",
+    "step1": "Take a photo",
+    "step2": "We detect your location",
+    "step3": "The city is notified",
+    "cta": "Get started"
   }
 }
