@@ -5,12 +5,12 @@ import { Analytics } from '@vercel/analytics/next';
 import { FingerprintProvider } from '@/context/FingerprintContext';
 
 const locales = ['en', 'fr', 'ar'];
-const APP_URL = 'https://nkc-waste.vercel.app';
+const APP_URL = 'https://www.0dechets.com';
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  name: 'nktt-waste',
+  name: '0Déchets',
   url: APP_URL,
   description:
     'Civic waste reporting PWA for Nouakchott, Mauritania. Citizens report illegal dumps, overflowing bins, and missed garbage collections by taking a photo. Reports appear as real-time pins on a public map to hold ARMA Holding accountable.',

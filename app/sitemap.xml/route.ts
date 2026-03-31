@@ -1,4 +1,4 @@
-const APP_URL = 'https://nkc-waste.vercel.app';
+const APP_URL = 'https://www.0dechets.com';
 
 export async function GET() {
   const body = `<?xml version="1.0" encoding="UTF-8"?>

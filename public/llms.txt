@@ -1,8 +1,8 @@
-# nktt-waste — Waste Reporting App for Nouakchott, Mauritania
+# 0Déchets — Waste Reporting App for Nouakchott, Mauritania
 
-## What is nktt-waste?
+## What is 0Déchets?
 
-nktt-waste (nktt-waste) is a free, open civic web application (PWA) that allows citizens of Nouakchott, Mauritania to report illegal waste dumps, overflowing garbage bins, and missed waste collections.
+0Déchets (0Déchets) is a free, open civic web application (PWA) that allows citizens of Nouakchott, Mauritania to report illegal waste dumps, overflowing garbage bins, and missed waste collections.
 
 ## How it works
 

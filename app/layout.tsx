@@ -1,16 +1,16 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
-const APP_URL = 'https://nkc-waste.vercel.app';
-const TITLE = 'nktt-waste — Waste Reporting in Nouakchott';
+const APP_URL = 'https://www.0dechets.com';
+const TITLE = '0Déchets — Waste Reporting in Nouakchott';
 const DESCRIPTION =
-  'nktt-waste is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections in Nouakchott, Mauritania. Take a photo, pin the location, and hold ARMA Holding accountable.';
+  '0Déchets is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections in Nouakchott, Mauritania. Take a photo, pin the location, and hold ARMA Holding accountable.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
   title: {
     default: TITLE,
-    template: '%s | nktt-waste',
+    template: '%s | 0Déchets',
   },
   description: DESCRIPTION,
   keywords: [
@@ -23,12 +23,12 @@ export const metadata: Metadata = {
     'signalement déchets',
     'بلاغ نفايات نواكشوط',
     'نفايات موريتانيا',
-    'nktt-waste',
+    '0Déchets',
     'PWA Mauritania',
   ],
-  authors: [{ name: 'nktt-waste' }],
-  creator: 'nktt-waste',
-  publisher: 'nktt-waste',
+  authors: [{ name: '0Déchets' }],
+  creator: '0Déchets',
+  publisher: '0Déchets',
   category: 'civic technology',
   classification: 'Environment, Civic',
   manifest: '/manifest.json',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     url: APP_URL,
     title: TITLE,
     description: DESCRIPTION,
-    siteName: 'nktt-waste',
+    siteName: '0Déchets',
     locale: 'fr_MR',
     alternateLocale: ['ar_MR', 'en_US'],
     images: [
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'nktt-waste — Waste Reporting Map for Nouakchott',
+        alt: '0Déchets — Waste Reporting Map for Nouakchott',
       },
     ],
   },
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     statusBarStyle: 'default',
-    title: 'nktt-waste',
+    title: '0Déchets',
   },
 };
 

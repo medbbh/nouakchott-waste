@@ -14,7 +14,7 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
-Sitemap: https://nkc-waste.vercel.app/sitemap.xml
+Sitemap: https://www.0dechets.com/sitemap.xml
 `;
   return new Response(body, { headers: { 'Content-Type': 'text/plain' } });
 }
