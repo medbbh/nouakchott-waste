@@ -1,15 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Trash2, Archive, Truck, CircleHelp, CheckCircle, XCircle, X } from 'lucide-react';
-import dynamic from 'next/dynamic';
 import { ReportCategory } from '@/types';
 import { compressImage } from '@/lib/imageUtils';
 import { uploadPhoto, insertReport } from '@/lib/supabase';
 import { useFingerprint } from '@/context/FingerprintContext';
-
-const CameraCapture = dynamic(() => import('./CameraCapture'), { ssr: false });
 
 const CATEGORY_ICONS = {
   dump: Trash2,
@@ -28,42 +25,33 @@ const CATEGORIES: { id: ReportCategory }[] = [
 interface ReportModalProps {
   onClose: () => void;
   onSuccess: () => void;
+  initialPhoto?: File;
+  initialCoords?: { latitude: number; longitude: number } | null;
+  onRetake?: () => void;
 }
 
 type LocationState = 'idle' | 'found' | 'failed';
 
-export default function ReportModal({ onClose, onSuccess }: ReportModalProps) {
+export default function ReportModal({ onClose, onSuccess, initialPhoto, initialCoords, onRetake }: ReportModalProps) {
   const t = useTranslations('report');
   const tc = useTranslations('categories');
   const locale = useLocale();
   const { visitorId } = useFingerprint();
 
-  const [showCamera, setShowCamera] = useState(false);
-  const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreview, setPhotoPreview] = useState<string | null>(null);
+  const [photoFile] = useState<File | null>(initialPhoto ?? null);
+  const [photoPreview] = useState<string | null>(() =>
+    initialPhoto ? URL.createObjectURL(initialPhoto) : null,
+  );
   const [category, setCategory] = useState<ReportCategory | null>(null);
   const [description, setDescription] = useState('');
-  const [locationState, setLocationState] = useState<LocationState>('idle');
-  const [coords, setCoords] = useState<{ latitude: number; longitude: number } | null>(null);
+  const [locationState] = useState<LocationState>(
+    initialPhoto ? (initialCoords ? 'found' : 'failed') : 'idle',
+  );
+  const [coords] = useState<{ latitude: number; longitude: number } | null>(
+    initialCoords ?? null,
+  );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleCameraCapture = (
-    file: File,
-    capturedCoords: { latitude: number; longitude: number } | null,
-  ) => {
-    setShowCamera(false);
-    const preview = URL.createObjectURL(file);
-    setPhotoFile(file);
-    setPhotoPreview(preview);
-
-    if (capturedCoords) {
-      setCoords(capturedCoords);
-      setLocationState('found');
-    } else {
-      setLocationState('failed');
-    }
-  };
 
   const handleSubmit = async () => {
     if (!photoFile) { setError(t('error_photo')); return; }
@@ -109,14 +97,6 @@ export default function ReportModal({ onClose, onSuccess }: ReportModalProps) {
 
   return (
     <>
-      {/* In-app camera — renders fullscreen above everything */}
-      {showCamera && (
-        <CameraCapture
-          onCapture={handleCameraCapture}
-          onClose={() => setShowCamera(false)}
-        />
-      )}
-
       <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
         <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
 
@@ -134,46 +114,37 @@ export default function ReportModal({ onClose, onSuccess }: ReportModalProps) {
           </div>
 
           <div className="p-4 space-y-5">
-            {/* Step 1: Photo */}
+            {/* Step 1: Photo (always pre-loaded) */}
             <div>
               <p className="text-sm font-medium text-gray-500 mb-2">1. {t('step_photo')}</p>
-              {!photoPreview ? (
-                <button
-                  onClick={() => setShowCamera(true)}
-                  className="w-full h-40 border-2 border-dashed border-gray-300 rounded-xl flex flex-col items-center justify-center gap-2 text-gray-400 hover:border-orange-400 hover:text-orange-500 transition-colors"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-                  <span className="text-sm font-medium">{t('take_photo')}</span>
-                </button>
-              ) : (
-                <div className="relative">
-                  <img
-                    src={photoPreview}
-                    alt="Preview"
-                    className="w-full h-48 object-cover rounded-xl"
-                  />
+              <div className="relative">
+                <img
+                  src={photoPreview!}
+                  alt="Preview"
+                  className="w-full h-48 object-cover rounded-xl"
+                />
+                {onRetake && (
                   <button
-                    onClick={() => setShowCamera(true)}
+                    onClick={onRetake}
                     className="absolute bottom-2 right-2 bg-black/60 text-white text-xs px-3 py-1.5 rounded-lg flex items-center gap-1.5"
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/><path d="M8 16H3v5"/></svg>
                     {t('retake')}
                   </button>
-
-                  <div className="absolute top-2 left-2">
-                    {locationState === 'found' && (
-                      <span className="bg-green-600/90 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                        <CheckCircle size={11} /> {t('location_found')}
-                      </span>
-                    )}
-                    {locationState === 'failed' && (
-                      <span className="bg-red-600/90 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                        <XCircle size={11} /> {t('location_failed')}
-                      </span>
-                    )}
-                  </div>
+                )}
+                <div className="absolute top-2 left-2">
+                  {locationState === 'found' && (
+                    <span className="bg-green-600/90 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <CheckCircle size={11} /> {t('location_found')}
+                    </span>
+                  )}
+                  {locationState === 'failed' && (
+                    <span className="bg-red-600/90 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <XCircle size={11} /> {t('location_failed')}
+                    </span>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
 
             {/* Step 2: Category */}

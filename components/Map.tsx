@@ -107,7 +107,7 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
           category: r.category,
           status: r.status,
           upvotes: r.upvotes,
-          icon: `hotspot-${r.category}`,
+          icon: 'hotspot-report',
         },
       })),
     }),
@@ -138,10 +138,8 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
     );
 
     m.on('load', () => {
-      // Register one pulsing dot image per category
-      Object.entries(CATEGORY_COLORS).forEach(([category, color]) => {
-        createPulsingDot(m, color, `hotspot-${category}`);
-      });
+      // Single red pulsing dot for all report pins
+      createPulsingDot(m, '#ef4444', 'hotspot-report');
 
       // GeoJSON source with clustering
       m.addSource('reports', {

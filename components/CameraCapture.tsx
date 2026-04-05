@@ -6,17 +6,27 @@ import { RotateCcw, X, Zap, ZapOff } from 'lucide-react';
 interface CameraCaptureProps {
   onCapture: (file: File, coords: { latitude: number; longitude: number } | null) => void;
   onClose: () => void;
+  initialStream?: MediaStream;
 }
 
-export default function CameraCapture({ onCapture, onClose }: CameraCaptureProps) {
+export default function CameraCapture({ onCapture, onClose, initialStream }: CameraCaptureProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const initialStreamConsumed = useRef(false);
   const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [facingMode, setFacingMode] = useState<'environment' | 'user'>('environment');
   const [capturing, setCapturing] = useState(false);
   const [torchOn, setTorchOn] = useState(false);
   const [torchSupported, setTorchSupported] = useState(false);
+
+  const attachStream = (stream: MediaStream) => {
+    streamRef.current = stream;
+    const track = stream.getVideoTracks()[0];
+    const caps = track.getCapabilities?.() as Record<string, unknown> | undefined;
+    if (caps?.torch) setTorchSupported(true);
+    if (videoRef.current) videoRef.current.srcObject = stream;
+  };
 
   useEffect(() => {
     let cancelled = false;
@@ -32,34 +42,31 @@ export default function CameraCapture({ onCapture, onClose }: CameraCaptureProps
     setTorchOn(false);
     setTorchSupported(false);
 
-    navigator.mediaDevices
-      .getUserMedia({
-        video: { facingMode: { ideal: facingMode }, width: { ideal: 1920 }, height: { ideal: 1080 } },
-        audio: false,
-      })
-      .then((stream) => {
-        // Component was unmounted before stream arrived — kill it immediately
-        if (cancelled) {
-          stream.getTracks().forEach((t) => t.stop());
-          return;
-        }
-        streamRef.current = stream;
-
-        const track = stream.getVideoTracks()[0];
-        const capabilities = track.getCapabilities?.() as Record<string, unknown> | undefined;
-        if (capabilities?.torch) setTorchSupported(true);
-
-        if (videoRef.current) videoRef.current.srcObject = stream;
-      })
-      .catch(() => {
-        if (!cancelled) setError('Camera access denied. Please allow camera access and try again.');
-      });
+    // On first mount, reuse the pre-started stream from the click handler
+    // (avoids re-prompting on iOS Safari where getUserMedia must be in gesture handler)
+    if (initialStream && !initialStreamConsumed.current) {
+      initialStreamConsumed.current = true;
+      attachStream(initialStream);
+    } else {
+      navigator.mediaDevices
+        .getUserMedia({
+          video: { facingMode: { ideal: facingMode }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+          audio: false,
+        })
+        .then((stream) => {
+          if (cancelled) { stream.getTracks().forEach((t) => t.stop()); return; }
+          attachStream(stream);
+        })
+        .catch(() => {
+          if (!cancelled) setError('Camera access denied. Please allow camera access and try again.');
+        });
+    }
 
     return () => {
       cancelled = true;
       stopStream();
     };
-  }, [facingMode]);
+  }, [facingMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const toggleTorch = async () => {
     const track = streamRef.current?.getVideoTracks()[0];

@@ -15,8 +15,12 @@ const reportsPromise = typeof window !== 'undefined' ? import('@/lib/supabase').
 
 // Load map without SSR (Mapbox requires browser)
 const Map = dynamic(() => import('@/components/Map'), { ssr: false });
+const CameraCapture = dynamic(() => import('@/components/CameraCapture'), { ssr: false });
 const ReportModal = dynamic(() => import('@/components/ReportModal'), { ssr: false });
 const DetailModal = dynamic(() => import('@/components/DetailModal'), { ssr: false });
+
+type ReportStage = null | 'camera' | 'form';
+type PendingPhoto = { file: File; coords: { latitude: number; longitude: number } | null };
 
 function PageContent() {
   const t = useTranslations();
@@ -24,7 +28,9 @@ function PageContent() {
 
   const [reports, setReports] = useState<Report[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showReportModal, setShowReportModal] = useState(false);
+  const [reportStage, setReportStage] = useState<ReportStage>(null);
+  const [pendingStream, setPendingStream] = useState<MediaStream | null>(null);
+  const [pendingPhoto, setPendingPhoto] = useState<PendingPhoto | null>(null);
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [successToast, setSuccessToast] = useState(false);
 
@@ -54,6 +60,50 @@ function PageContent() {
     });
   }, [searchParams, reports]);
 
+  // Open camera directly on Report button click — call getUserMedia synchronously
+  // within the gesture handler so iOS Safari doesn't re-prompt for permission
+  const handleReportButtonClick = useCallback(() => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: { facingMode: { ideal: 'environment' }, width: { ideal: 1920 }, height: { ideal: 1080 } },
+        audio: false,
+      })
+      .then((stream) => {
+        setPendingStream(stream);
+        setReportStage('camera');
+      })
+      .catch(() => {
+        // Permission denied — show camera so CameraCapture can display the error
+        setReportStage('camera');
+      });
+  }, []);
+
+  const handleCameraCapture = useCallback(
+    (file: File, coords: { latitude: number; longitude: number } | null) => {
+      setPendingPhoto({ file, coords });
+      setPendingStream(null);
+      setReportStage('form');
+    },
+    [],
+  );
+
+  const handleCameraClose = useCallback(() => {
+    pendingStream?.getTracks().forEach((t) => t.stop());
+    setPendingStream(null);
+    setReportStage(null);
+  }, [pendingStream]);
+
+  const handleRetake = useCallback(() => {
+    setPendingPhoto(null);
+    // Permission already granted — CameraCapture calls getUserMedia on its own
+    setReportStage('camera');
+  }, []);
+
+  const handleModalClose = useCallback(() => {
+    setPendingPhoto(null);
+    setReportStage(null);
+  }, []);
+
   const handleReportClick = useCallback((report: Report) => {
     setSelectedReport(report);
   }, []);
@@ -63,7 +113,8 @@ function PageContent() {
   }, []);
 
   const handleReportSuccess = useCallback(() => {
-    setShowReportModal(false);
+    setPendingPhoto(null);
+    setReportStage(null);
     setSuccessToast(true);
     setTimeout(() => setSuccessToast(false), 3000);
   }, []);
@@ -125,7 +176,7 @@ function PageContent() {
       {/* Floating Report button */}
       <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10">
         <button
-          onClick={() => setShowReportModal(true)}
+          onClick={handleReportButtonClick}
           className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-bold px-6 py-3.5 rounded-full shadow-lg shadow-orange-500/40 transition-all text-sm"
         >
           <Camera size={18} strokeWidth={2} />
@@ -142,10 +193,22 @@ function PageContent() {
         </div>
       )}
 
-      {/* Modals */}
-      {showReportModal && (
+      {/* Camera — opens first before the form modal */}
+      {reportStage === 'camera' && (
+        <CameraCapture
+          initialStream={pendingStream ?? undefined}
+          onCapture={handleCameraCapture}
+          onClose={handleCameraClose}
+        />
+      )}
+
+      {/* Report form — opens after photo is taken */}
+      {reportStage === 'form' && pendingPhoto && (
         <ReportModal
-          onClose={() => setShowReportModal(false)}
+          initialPhoto={pendingPhoto.file}
+          initialCoords={pendingPhoto.coords}
+          onRetake={handleRetake}
+          onClose={handleModalClose}
           onSuccess={handleReportSuccess}
         />
       )}
