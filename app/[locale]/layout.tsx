@@ -13,7 +13,7 @@ const jsonLd = {
   name: '0Déchets',
   url: APP_URL,
   description:
-    'Civic waste reporting PWA for Nouakchott, Mauritania. Citizens report illegal dumps, overflowing bins, and missed garbage collections by taking a photo. Reports appear as real-time pins on a public map to hold ARMA Holding accountable.',
+    'Civic waste reporting PWA for Mauritania. Citizens report illegal dumps, overflowing bins, and missed garbage collections by taking a photo. Reports appear as real-time pins on a public map to hold local authorities accountable.',
   applicationCategory: 'UtilitiesApplication',
   operatingSystem: 'Any',
   browserRequirements: 'Requires JavaScript. Works on all modern mobile browsers.',
@@ -26,7 +26,7 @@ const jsonLd = {
   ],
   spatialCoverage: {
     '@type': 'Place',
-    name: 'Nouakchott, Mauritania',
+    name: 'Mauritania',
     geo: { '@type': 'GeoCoordinates', latitude: 18.0858, longitude: -15.9785 },
   },
   featureList: [

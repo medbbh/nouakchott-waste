@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 const APP_URL = 'https://www.0dechets.com';
-const TITLE = '0Déchets — Waste Reporting in Nouakchott';
+const TITLE = '0Déchets — Waste Reporting in Mauritania';
 const DESCRIPTION =
-  '0Déchets is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections in Nouakchott, Mauritania. Take a photo, pin the location, and hold ARMA Holding accountable.';
+  '0Déchets is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections across Mauritania. Take a photo, pin the location, and hold local authorities accountable.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -14,14 +14,14 @@ export const metadata: Metadata = {
   },
   description: DESCRIPTION,
   keywords: [
-    'waste reporting Nouakchott',
-    'déchets Nouakchott',
+    'waste reporting Mauritania',
+    'déchets Mauritanie',
     'illegal dump Mauritania',
     'ARMA Holding',
     'civic app Mauritania',
     'garbage reporting',
     'signalement déchets',
-    'بلاغ نفايات نواكشوط',
+    'بلاغ نفايات موريتانيا',
     'نفايات موريتانيا',
     '0Déchets',
     'PWA Mauritania',
@@ -46,7 +46,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: '0Déchets — Waste Reporting Map for Nouakchott',
+        alt: '0Déchets — Waste Reporting Map for Mauritania',
       },
     ],
   },

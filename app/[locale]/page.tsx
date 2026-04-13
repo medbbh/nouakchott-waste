@@ -18,6 +18,7 @@ const Map = dynamic(() => import('@/components/Map'), { ssr: false });
 const CameraCapture = dynamic(() => import('@/components/CameraCapture'), { ssr: false });
 const ReportModal = dynamic(() => import('@/components/ReportModal'), { ssr: false });
 const DetailModal = dynamic(() => import('@/components/DetailModal'), { ssr: false });
+const PWAInstallPrompt = dynamic(() => import('@/components/PWAInstallPrompt'), { ssr: false });
 
 type ReportStage = null | 'camera' | 'form';
 type PendingPhoto = { file: File; coords: { latitude: number; longitude: number } | null };
@@ -222,6 +223,7 @@ function PageContent() {
       )}
 
       <WelcomeScreen />
+      <PWAInstallPrompt />
     </div>
   );
 }

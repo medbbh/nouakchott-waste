@@ -54,9 +54,18 @@
   "errors": {
     "generic": "Something went wrong. Please try again."
   },
+  "pwa": {
+    "title": "Add to Home Screen",
+    "subtitle": "Install 0Déchets for faster access and offline use.",
+    "install": "Install",
+    "not_now": "Not now",
+    "ios_step1": "Tap the Share button at the bottom of your browser",
+    "ios_step2": "Scroll down and tap \"Add to Home Screen\"",
+    "ios_step3": "Tap \"Add\" to confirm"
+  },
   "welcome": {
     "title": "Welcome to 0Déchets",
-    "subtitle": "Report illegal dumps and overflowing bins in Nouakchott — in seconds.",
+    "subtitle": "Report illegal dumps and overflowing bins across Mauritania — in seconds.",
     "step1": "Take a photo",
     "step2": "We detect your location",
     "step3": "The city is notified",

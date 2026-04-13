@@ -1,7 +1,7 @@
 {
-  "name": "Nouakchott Waste Reports",
-  "short_name": "NWK Reports",
-  "description": "Report illegal waste dumps in Nouakchott, Mauritania",
+  "name": "Mauritania Waste Reports",
+  "short_name": "0 dechets",
+  "description": "Report illegal waste dumps across Mauritania",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
