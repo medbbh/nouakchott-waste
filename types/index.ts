@@ -12,6 +12,7 @@ export interface Report {
   neighborhood: string | null;
   status: ReportStatus;
   upvotes: number;
+  resolve_votes: number;
 }
 
 export const CATEGORY_COLORS: Record<ReportCategory, string> = {

@@ -25,7 +25,7 @@ export default function WelcomeScreen() {
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-3xl px-6 pt-8 pb-10 shadow-2xl">
+      <div className="w-full sm:max-w-sm bg-white rounded-t-3xl sm:rounded-3xl px-6 pt-8 pb-safe-10 shadow-2xl">
         {/* Logo */}
         <div className="flex items-center gap-2 mb-4">
           <div className="w-10 h-10 bg-orange-500 rounded-2xl flex items-center justify-center shadow">

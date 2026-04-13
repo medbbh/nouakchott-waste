@@ -74,7 +74,7 @@ export default function PWAInstallPrompt() {
   if (!visible || !platform) return null;
 
   return (
-    <div className="absolute bottom-24 left-3 right-3 z-40 animate-slide-up">
+    <div className="absolute bottom-safe-24 left-3 right-3 z-40 animate-slide-up">
       <div className="bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
         {/* Header */}
         <div className="flex items-center justify-between px-4 pt-4 pb-2">

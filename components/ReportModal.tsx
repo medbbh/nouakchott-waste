@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations, useLocale } from 'next-intl';
 import { Trash2, Archive, Truck, CircleHelp, CheckCircle, XCircle, X } from 'lucide-react';
-import { ReportCategory } from '@/types';
+import { Report, ReportCategory } from '@/types';
 import { compressImage } from '@/lib/imageUtils';
 import { uploadPhoto, insertReport } from '@/lib/supabase';
 import { useFingerprint } from '@/context/FingerprintContext';
@@ -24,7 +24,7 @@ const CATEGORIES: { id: ReportCategory }[] = [
 
 interface ReportModalProps {
   onClose: () => void;
-  onSuccess: () => void;
+  onSuccess: (report: Report) => void;
   initialPhoto?: File;
   initialCoords?: { latitude: number; longitude: number } | null;
   onRetake?: () => void;
@@ -73,7 +73,7 @@ export default function ReportModal({ onClose, onSuccess, initialPhoto, initialC
         neighborhood = geoJson.neighborhood ?? null;
       } catch { /* non-fatal */ }
 
-      await insertReport({
+      const report = await insertReport({
         photo_url: photoUrl,
         latitude: coords.latitude,
         longitude: coords.longitude,
@@ -83,7 +83,7 @@ export default function ReportModal({ onClose, onSuccess, initialPhoto, initialC
         submitter_id: visitorId,
       });
 
-      onSuccess();
+      onSuccess(report);
     } catch {
       setError(t('error_submit'));
     } finally {
@@ -197,6 +197,7 @@ export default function ReportModal({ onClose, onSuccess, initialPhoto, initialC
             >
               {submitting ? t('submitting') : t('submit')}
             </button>
+            <div className="pb-safe" />
           </div>
         </div>
       </div>

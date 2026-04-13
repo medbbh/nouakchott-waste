@@ -31,13 +31,22 @@
     "neighborhood": "الحي",
     "status_open": "مفتوح",
     "status_resolved": "محلول",
-    "upvote": "دعم",
-    "upvoted": "تم الدعم",
     "share": "مشاركة",
     "copy_link": "نسخ الرابط",
     "copied": "تم النسخ!",
     "share_facebook": "فيسبوك",
-    "share_whatsapp": "واتساب"
+    "share_whatsapp": "واتساب",
+    "share_image": "حفظ الصورة",
+    "mark_resolved": "هل تم تنظيفه؟",
+    "resolve_voted": "صوّتت بالتنظيف",
+    "resolving": "جاري التصويت...",
+    "whatsapp_text": "🗑️ {category} في {neighborhood} — ساعد في المطالبة بالتنظيف!\n\nاطّلع على البلاغ: {url}"
+  },
+  "share_prompt": {
+    "title": "انشر الخبر!",
+    "body": "شارك بلاغك على واتساب حتى يراه جيرانك ويزيد الضغط للتنظيف.",
+    "cta": "مشاركة على واتساب",
+    "skip": "لاحقاً"
   },
   "categories": {
     "dump": "مكب غير قانوني",

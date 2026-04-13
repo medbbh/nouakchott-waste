@@ -31,13 +31,22 @@
     "neighborhood": "Neighborhood",
     "status_open": "Open",
     "status_resolved": "Resolved",
-    "upvote": "Upvote",
-    "upvoted": "Upvoted",
     "share": "Share",
     "copy_link": "Copy Link",
     "copied": "Copied!",
     "share_facebook": "Facebook",
-    "share_whatsapp": "WhatsApp"
+    "share_whatsapp": "WhatsApp",
+    "share_image": "Save Image",
+    "mark_resolved": "Cleaned up?",
+    "resolve_voted": "Voted as cleaned",
+    "resolving": "Voting...",
+    "whatsapp_text": "🗑️ {category} in {neighborhood} — help push for cleanup!\n\nSee it on the map: {url}"
+  },
+  "share_prompt": {
+    "title": "Spread the word!",
+    "body": "Share your report on WhatsApp so your neighbors can see it and put pressure for cleanup.",
+    "cta": "Share on WhatsApp",
+    "skip": "Maybe later"
   },
   "categories": {
     "dump": "Illegal Dump",

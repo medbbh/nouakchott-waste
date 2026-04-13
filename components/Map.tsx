@@ -15,6 +15,31 @@ interface MapProps {
   onReportsUpdate: (reports: Report[]) => void;
 }
 
+/** Creates a static (non-animated) dot image — used for resolved reports */
+function addStaticDot(map: mapboxgl.Map, color: string, imageId: string) {
+  const size = DOT_SIZE;
+  const canvas = document.createElement('canvas');
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext('2d')!;
+
+  const r = parseInt(color.slice(1, 3), 16);
+  const g = parseInt(color.slice(3, 5), 16);
+  const b = parseInt(color.slice(5, 7), 16);
+  const cx = size / 2, cy = size / 2;
+
+  ctx.beginPath();
+  ctx.arc(cx, cy, size * 0.15, 0, Math.PI * 2);
+  ctx.fillStyle = `rgba(${r},${g},${b},0.55)`;
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  const { data } = ctx.getImageData(0, 0, size, size);
+  map.addImage(imageId, { width: size, height: size, data: new Uint8Array(data.buffer) });
+}
+
 /** Creates a pulsing hotspot image for a given hex color */
 function createPulsingDot(map: mapboxgl.Map, color: string, imageId: string) {
   const size = DOT_SIZE;
@@ -107,7 +132,6 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
           category: r.category,
           status: r.status,
           upvotes: r.upvotes,
-          icon: 'hotspot-report',
         },
       })),
     }),
@@ -138,8 +162,9 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
     );
 
     m.on('load', () => {
-      // Single red pulsing dot for all report pins
-      createPulsingDot(m, '#ef4444', 'hotspot-report');
+      // Pulsing dot for open reports, static gray for resolved
+      createPulsingDot(m, '#ef4444', 'hotspot-open');
+      addStaticDot(m, '#6b7280', 'hotspot-resolved');
 
       // GeoJSON source with clustering
       m.addSource('reports', {
@@ -182,14 +207,14 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
         paint: { 'text-color': '#ffffff' },
       });
 
-      // Individual pulsing hotspot pins
+      // Individual pins — pulsing for open, static gray for resolved
       m.addLayer({
         id: 'unclustered-point',
         type: 'symbol',
         source: 'reports',
         filter: ['!', ['has', 'point_count']],
         layout: {
-          'icon-image': ['get', 'icon'],
+          'icon-image': ['match', ['get', 'status'], 'resolved', 'hotspot-resolved', 'hotspot-open'],
           'icon-size': 1,
           'icon-allow-overlap': true,
         },

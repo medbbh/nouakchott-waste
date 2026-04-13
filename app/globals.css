@@ -33,7 +33,33 @@ body {
   box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
 }
 
-/* Stick controls to the very bottom-right */
+/* Stick controls above the home indicator */
 .mapboxgl-ctrl-bottom-right {
-  bottom: 24px !important;
+  bottom: calc(24px + env(safe-area-inset-bottom)) !important;
+  right: calc(8px + env(safe-area-inset-right)) !important;
+}
+
+/* Safe area utilities */
+@layer utilities {
+  .pt-safe {
+    padding-top: env(safe-area-inset-top);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .pt-safe-3 {
+    padding-top: calc(0.75rem + env(safe-area-inset-top));
+  }
+  .pb-safe-8 {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+  .pb-safe-10 {
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+  .bottom-safe-8 {
+    bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+  .bottom-safe-24 {
+    bottom: calc(6rem + env(safe-area-inset-bottom));
+  }
 }

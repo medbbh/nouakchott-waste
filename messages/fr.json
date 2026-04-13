@@ -31,13 +31,22 @@
     "neighborhood": "Quartier",
     "status_open": "Ouvert",
     "status_resolved": "Résolu",
-    "upvote": "Voter",
-    "upvoted": "Voté",
     "share": "Partager",
     "copy_link": "Copier le lien",
     "copied": "Copié!",
     "share_facebook": "Facebook",
-    "share_whatsapp": "WhatsApp"
+    "share_whatsapp": "WhatsApp",
+    "share_image": "Enregistrer l'image",
+    "mark_resolved": "C'est nettoyé ?",
+    "resolve_voted": "Voté comme nettoyé",
+    "resolving": "Vote en cours...",
+    "whatsapp_text": "🗑️ {category} signalé à {neighborhood} — aidez à faire pression pour le nettoyage !\n\nVoir sur la carte : {url}"
+  },
+  "share_prompt": {
+    "title": "Faites passer le mot !",
+    "body": "Partagez votre signalement sur WhatsApp pour que vos voisins voient et fassent pression.",
+    "cta": "Partager sur WhatsApp",
+    "skip": "Plus tard"
   },
   "categories": {
     "dump": "Dépôt Sauvage",
