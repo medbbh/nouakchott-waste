@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" fill="none">
+  <!-- Background -->
+  <rect width="1200" height="630" fill="#fff7ed"/>
+
+  <!-- Orange left accent bar -->
+  <rect width="12" height="630" fill="#f97316"/>
+
+  <!-- Large soft orange circle (decorative) -->
+  <circle cx="980" cy="315" r="340" fill="#f97316" fill-opacity="0.08"/>
+  <circle cx="980" cy="315" r="220" fill="#f97316" fill-opacity="0.10"/>
+
+  <!-- Leaf icon (lucide-leaf), white on orange circle, centered right -->
+  <g transform="translate(980, 315) scale(9) translate(-12, -12)" stroke="#f97316" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M11 20A7 7 0 0 1 9.8 6.1C15.25 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z" fill="#f97316" fill-opacity="0.3"/>
+    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+  </g>
+
+  <!-- Brand name -->
+  <text x="100" y="290" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="112" font-weight="800" fill="#1f2937" letter-spacing="-3">0Déchets</text>
+
+  <!-- Tagline -->
+  <text x="104" y="370" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="38" font-weight="400" fill="#6b7280">Signalez les dépôts sauvages en Mauritanie</text>
+
+  <!-- URL -->
+  <text x="104" y="540" font-family="system-ui, -apple-system, Arial, sans-serif" font-size="30" font-weight="600" fill="#f97316">0dechets.com</text>
+</svg>
