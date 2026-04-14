@@ -80,6 +80,9 @@ export default function DetailModal({ report, onClose, onResolved }: DetailModal
         tc(report.category),
         CATEGORY_COLORS[report.category as ReportCategory],
         report.neighborhood,
+        report.created_at,
+        report.latitude,
+        report.longitude,
       );
       if (!blob) return;
 
