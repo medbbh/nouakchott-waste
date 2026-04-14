@@ -88,7 +88,6 @@ export default function Image() {
             paddingBottom: '18px',
             paddingLeft: '40px',
             paddingRight: '40px',
-            width: 'fit-content',
           }}>
             Signaler maintenant →
           </div>
