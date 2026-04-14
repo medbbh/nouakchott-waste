@@ -12,6 +12,6 @@ export default createMiddleware(routing);
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico|icons|manifest.json|mapbox-gl.css|sw.js|workbox-.*\\.js).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|icons|manifest.json|mapbox-gl.css|sw.js|workbox-.*\\.js|og-image.*|logo\\.svg|llms\\.txt).*)',
   ],
 };

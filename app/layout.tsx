@@ -40,12 +40,14 @@ export const metadata: Metadata = {
     siteName: '0Déchets',
     locale: 'fr_MR',
     alternateLocale: ['ar_MR', 'en_US'],
+    images: [{ url: `${APP_URL}/og-image.png`, width: 1200, height: 630 }],
   },
 
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
+    images: [`${APP_URL}/og-image.png`],
   },
 
   robots: {
@@ -74,5 +76,9 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return children;
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  );
 }

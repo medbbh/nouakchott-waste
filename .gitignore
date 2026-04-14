@@ -31,6 +31,9 @@ yarn-error.log*
 # vercel
 .vercel
 
+# OG image source (generated artifact — only og-image.png is committed)
+public/map-bg.png
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
