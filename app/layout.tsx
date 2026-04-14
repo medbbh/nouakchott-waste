@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 const APP_URL = 'https://www.0dechets.com';
-const TITLE = '0Déchets — Waste Reporting in Mauritania';
+const TITLE = '0Déchets — Signalez les dépôts sauvages en Mauritanie';
 const DESCRIPTION =
-  '0Déchets is a free civic PWA for reporting illegal waste dumps, overflowing bins, and missed garbage collections across Mauritania. Take a photo, pin the location, and hold local authorities accountable.';
+  'Dépôt sauvage ou benne débordante en Mauritanie ? Prenez une photo, épinglez le lieu et alertez votre communauté. Signalez en quelques secondes.';
 
 export const metadata: Metadata = {
   metadataBase: new URL(APP_URL),
@@ -14,17 +14,16 @@ export const metadata: Metadata = {
   },
   description: DESCRIPTION,
   keywords: [
-    'waste reporting Mauritania',
-    'déchets Mauritanie',
-    'illegal dump Mauritania',
-    'ARMA Holding',
-    'civic app Mauritania',
-    'garbage reporting',
-    'signalement déchets',
-    'بلاغ نفايات موريتانيا',
+    'signalement déchets Mauritanie',
+    'dépôt sauvage Mauritanie',
+    'déchets Nouakchott',
+    'application signalement déchets',
+    'benne débordante Mauritanie',
     'نفايات موريتانيا',
+    'بلاغ نفايات موريتانيا',
     '0Déchets',
-    'PWA Mauritania',
+    'application civique Mauritanie',
+    'signaler déchet',
   ],
   authors: [{ name: '0Déchets' }],
   creator: '0Déchets',
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: '0Déchets — Waste Reporting Map for Mauritania',
+        alt: '0Déchets — Signalez les dépôts sauvages en Mauritanie',
       },
     ],
   },
