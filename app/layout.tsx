@@ -40,21 +40,12 @@ export const metadata: Metadata = {
     siteName: '0Déchets',
     locale: 'fr_MR',
     alternateLocale: ['ar_MR', 'en_US'],
-    images: [
-      {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: '0Déchets — Signalez les dépôts sauvages en Mauritanie',
-      },
-    ],
   },
 
   twitter: {
     card: 'summary_large_image',
     title: TITLE,
     description: DESCRIPTION,
-    images: ['/og-image.png'],
   },
 
   robots: {
