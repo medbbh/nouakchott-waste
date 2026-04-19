@@ -47,10 +47,7 @@ function PageContent() {
 
   // Initial load — uses the already-in-flight promise
   useEffect(() => {
-    reportsPromise
-      .then(setReports)
-      .catch(console.error)
-      .finally(() => setLoading(false));
+    reportsPromise.then(setReports).catch(console.error).finally(() => setLoading(false));
   }, []);
 
   // Pull-to-refresh touch handlers
@@ -214,7 +211,11 @@ function PageContent() {
           <span className="text-white font-semibold text-sm drop-shadow">
             {t('nav.title')}
           </span>
-          {!loading && reports.length > 0 && (
+          {loading ? (
+            <span className="bg-orange-500/90 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow flex items-center gap-1">
+              <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+            </span>
+          ) : reports.length > 0 && (
             <span className="bg-orange-500/90 text-white text-xs font-semibold px-2 py-0.5 rounded-full shadow flex items-center gap-1">
               {reports.length}
               <span className="hidden sm:inline">{t('map.reports_label')}</span>
@@ -253,21 +254,11 @@ function PageContent() {
 
       {/* Full-screen map */}
       <div className="absolute inset-0">
-        {!loading && (
-          <Map
-            reports={reports}
-            onReportClick={handleReportClick}
-            onReportsUpdate={handleReportsUpdate}
-          />
-        )}
-        {loading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
-            <div className="text-center">
-              <div className="w-10 h-10 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-gray-500 text-sm">{t('map.loading')}</p>
-            </div>
-          </div>
-        )}
+        <Map
+          reports={reports}
+          onReportClick={handleReportClick}
+          onReportsUpdate={handleReportsUpdate}
+        />
       </div>
 
       {/* Floating Report button */}

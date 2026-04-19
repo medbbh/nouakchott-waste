@@ -153,7 +153,7 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
     m.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
     m.addControl(
-      new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: true } }),
+      new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: true }, trackUserLocation: false, showUserLocation: false }),
       'bottom-right',
     );
 
