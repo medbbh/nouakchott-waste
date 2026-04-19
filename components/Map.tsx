@@ -2,12 +2,11 @@
 
 import { useEffect, useRef, useCallback, useState } from 'react';
 import mapboxgl from 'mapbox-gl';
-import { Report, CATEGORY_COLORS } from '@/types';
+import { Report, CATEGORY_COLORS, ReportCategory } from '@/types';
 import { supabase } from '@/lib/supabase';
 import { useTranslations } from 'next-intl';
 
 const NOUAKCHOTT_CENTER: [number, number] = [-15.9785, 18.0858];
-const DOT_SIZE = 80;
 
 interface MapProps {
   reports: Report[];
@@ -15,111 +14,82 @@ interface MapProps {
   onReportsUpdate: (reports: Report[]) => void;
 }
 
-/** Creates a static (non-animated) dot image — used for resolved reports */
-function addStaticDot(map: mapboxgl.Map, color: string, imageId: string) {
-  const size = DOT_SIZE;
-  const canvas = document.createElement('canvas');
-  canvas.width = size;
-  canvas.height = size;
-  const ctx = canvas.getContext('2d')!;
+function createPinElement(
+  report: Report,
+  onClickRef: React.MutableRefObject<(r: Report) => void>,
+): HTMLElement {
+  const color = CATEGORY_COLORS[report.category as ReportCategory] ?? '#f97316';
+  const borderColor = report.status === 'resolved' ? '#9ca3af' : color;
 
-  const r = parseInt(color.slice(1, 3), 16);
-  const g = parseInt(color.slice(3, 5), 16);
-  const b = parseInt(color.slice(5, 7), 16);
-  const cx = size / 2, cy = size / 2;
+  // Outer element — Mapbox sets `transform` here for positioning; we never touch it
+  const outer = document.createElement('div');
+  outer.style.cssText = 'cursor: pointer;';
 
-  ctx.beginPath();
-  ctx.arc(cx, cy, size * 0.15, 0, Math.PI * 2);
-  ctx.fillStyle = `rgba(${r},${g},${b},0.55)`;
-  ctx.fill();
-  ctx.strokeStyle = 'rgba(255,255,255,0.8)';
-  ctx.lineWidth = 2;
-  ctx.stroke();
+  // Inner wrapper — safe to apply our own transforms here
+  const inner = document.createElement('div');
+  inner.style.cssText = `
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: transform 0.15s ease;
+    transform-origin: bottom center;
+  `;
 
-  const { data } = ctx.getImageData(0, 0, size, size);
-  map.addImage(imageId, { width: size, height: size, data: new Uint8Array(data.buffer) });
-}
+  // Photo frame
+  const frame = document.createElement('div');
+  frame.style.cssText = `
+    width: 42px;
+    height: 54px;
+    border-radius: 9px;
+    border: 2.5px solid ${borderColor};
+    overflow: hidden;
+    background: #d1d5db;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  `;
 
-/** Creates a pulsing hotspot image for a given hex color */
-function createPulsingDot(map: mapboxgl.Map, color: string, imageId: string) {
-  const size = DOT_SIZE;
+  const img = document.createElement('img');
+  img.src = report.photo_url;
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+  img.loading = 'lazy';
+  frame.appendChild(img);
 
-  const dot = {
-    width: size,
-    height: size,
-    data: new Uint8Array(size * size * 4),
-    context: null as CanvasRenderingContext2D | null,
+  // Pointer tail
+  const tail = document.createElement('div');
+  tail.style.cssText = `
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid ${borderColor};
+    margin-top: -1px;
+  `;
 
-    onAdd() {
-      const canvas = document.createElement('canvas');
-      canvas.width = size;
-      canvas.height = size;
-      this.context = canvas.getContext('2d');
-    },
+  inner.appendChild(frame);
+  inner.appendChild(tail);
+  outer.appendChild(inner);
 
-    render() {
-      const duration = 1800;
-      const t = (performance.now() % duration) / duration;
-      const ctx = this.context!;
-      const cx = size / 2;
-      const cy = size / 2;
-      const innerR = size * 0.15;
-      const maxOuter = size * 0.42;
+  outer.addEventListener('click', (e) => {
+    e.stopPropagation();
+    onClickRef.current(report);
+  });
+  inner.addEventListener('mouseenter', () => { inner.style.transform = 'scale(1.1)'; });
+  inner.addEventListener('mouseleave', () => { inner.style.transform = ''; });
 
-      // Parse hex to rgb
-      const r = parseInt(color.slice(1, 3), 16);
-      const g = parseInt(color.slice(3, 5), 16);
-      const b = parseInt(color.slice(5, 7), 16);
-
-      ctx.clearRect(0, 0, size, size);
-
-      // Outer pulse ring
-      const outerR = innerR + (maxOuter - innerR) * t;
-      const alpha = (1 - t) * 0.55;
-      ctx.beginPath();
-      ctx.arc(cx, cy, outerR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r},${g},${b},${alpha})`;
-      ctx.fill();
-
-      // Mid ring
-      const midR = innerR + (maxOuter - innerR) * t * 0.5;
-      const midAlpha = (1 - t) * 0.25;
-      ctx.beginPath();
-      ctx.arc(cx, cy, midR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r},${g},${b},${midAlpha})`;
-      ctx.fill();
-
-      // Inner solid dot
-      ctx.beginPath();
-      ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(${r},${g},${b},1)`;
-      ctx.fill();
-
-      // White border
-      ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-      ctx.lineWidth = 2;
-      ctx.stroke();
-
-      this.data = new Uint8Array(ctx.getImageData(0, 0, size, size).data.buffer);
-      map.triggerRepaint();
-      return true;
-    },
-  };
-
-  map.addImage(imageId, dot as unknown as mapboxgl.StyleImageInterface, { pixelRatio: 2 });
+  return outer;
 }
 
 export default function Map({ reports, onReportClick, onReportsUpdate }: MapProps) {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
   const reportsRef = useRef<Report[]>(reports);
+  const markersRef = useRef<Record<string, mapboxgl.Marker>>({});
+  const onReportClickRef = useRef(onReportClick);
   const [stackedReports, setStackedReports] = useState<Report[]>([]);
   const tc = useTranslations('categories');
   const t = useTranslations('map');
 
-  useEffect(() => {
-    reportsRef.current = reports;
-  }, [reports]);
+  useEffect(() => { reportsRef.current = reports; }, [reports]);
+  useEffect(() => { onReportClickRef.current = onReportClick; }, [onReportClick]);
 
   const buildGeoJSON = useCallback(
     (data: Report[]): GeoJSON.FeatureCollection => ({
@@ -127,16 +97,44 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
       features: data.map((r) => ({
         type: 'Feature',
         geometry: { type: 'Point', coordinates: [r.longitude, r.latitude] },
-        properties: {
-          id: r.id,
-          category: r.category,
-          status: r.status,
-          upvotes: r.upvotes,
-        },
+        properties: { id: r.id, category: r.category, status: r.status },
       })),
     }),
     [],
   );
+
+  const syncMarkers = useCallback((data: Report[], m: mapboxgl.Map) => {
+    const existing = markersRef.current;
+    const incomingIds = new Set(data.map((r) => r.id));
+
+    // Remove stale
+    Object.entries(existing).forEach(([id, marker]) => {
+      if (!incomingIds.has(id)) { marker.remove(); delete existing[id]; }
+    });
+
+    // Add new
+    data.forEach((report) => {
+      if (!existing[report.id]) {
+        const el = createPinElement(report, onReportClickRef);
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'bottom' })
+          .setLngLat([report.longitude, report.latitude])
+          .addTo(m);
+        existing[report.id] = marker;
+      }
+    });
+  }, []);
+
+  const updateMarkerVisibility = useCallback(() => {
+    const m = map.current;
+    if (!m || !m.isSourceLoaded('reports')) return;
+    const unclustered = m.querySourceFeatures('reports', {
+      filter: ['!', ['has', 'point_count']],
+    });
+    const visibleIds = new Set(unclustered.map((f) => f.properties?.id as string));
+    Object.entries(markersRef.current).forEach(([id, marker]) => {
+      marker.getElement().style.display = visibleIds.has(id) ? 'block' : 'none';
+    });
+  }, []);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -151,10 +149,8 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
       attributionControl: false,
     });
 
-    map.current.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
-
     const m = map.current;
-
+    m.addControl(new mapboxgl.AttributionControl({ compact: true }), 'bottom-left');
     m.addControl(new mapboxgl.NavigationControl(), 'bottom-right');
     m.addControl(
       new mapboxgl.GeolocateControl({ positionOptions: { enableHighAccuracy: true } }),
@@ -162,11 +158,6 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
     );
 
     m.on('load', () => {
-      // Pulsing dot for open reports, static gray for resolved
-      createPulsingDot(m, '#ef4444', 'hotspot-open');
-      addStaticDot(m, '#6b7280', 'hotspot-resolved');
-
-      // GeoJSON source with clustering
       m.addSource('reports', {
         type: 'geojson',
         data: buildGeoJSON(reportsRef.current),
@@ -182,18 +173,15 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
         source: 'reports',
         filter: ['has', 'point_count'],
         paint: {
-          'circle-color': [
-            'step', ['get', 'point_count'],
-            '#f97316', 10, '#ea580c', 30, '#c2410c',
-          ],
+          'circle-color': ['step', ['get', 'point_count'], '#f97316', 10, '#ea580c', 30, '#c2410c'],
           'circle-radius': ['step', ['get', 'point_count'], 22, 10, 30, 30, 40],
-          'circle-opacity': 0.9,
+          'circle-opacity': 0.92,
           'circle-stroke-width': 2,
           'circle-stroke-color': 'rgba(255,255,255,0.6)',
         },
       });
 
-      // Cluster count labels
+      // Cluster count
       m.addLayer({
         id: 'cluster-count',
         type: 'symbol',
@@ -207,68 +195,47 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
         paint: { 'text-color': '#ffffff' },
       });
 
-      // Individual pins — pulsing for open, static gray for resolved
-      m.addLayer({
-        id: 'unclustered-point',
-        type: 'symbol',
-        source: 'reports',
-        filter: ['!', ['has', 'point_count']],
-        layout: {
-          'icon-image': ['match', ['get', 'status'], 'resolved', 'hotspot-resolved', 'hotspot-open'],
-          'icon-size': 1,
-          'icon-allow-overlap': true,
-        },
-      });
+      // Photo markers for individual pins
+      syncMarkers(reportsRef.current, m);
+      m.on('render', updateMarkerVisibility);
 
-      // Cluster click → zoom in, or show picker if already at max zoom
+      // Cluster click
       m.on('click', 'clusters', (e) => {
         const features = m.queryRenderedFeatures(e.point, { layers: ['clusters'] });
-        const feature = features[0];
-        if (!feature) return;
-        const clusterId = feature.properties?.cluster_id;
-        const source = m.getSource('reports') as mapboxgl.GeoJSONSource;
-        // Always show picker — no zoom confusion on mobile
-        source.getClusterLeaves(clusterId, 20, 0, (err, leaves) => {
-          if (err || !leaves) return;
-          const ids = leaves.map((f) => f.properties?.id as string);
-          const stacked = reportsRef.current.filter((r) => ids.includes(r.id));
-          setStackedReports(stacked);
-        });
-      });
-
-      // Pin click → open detail modal
-      m.on('click', 'unclustered-point', (e) => {
-        const props = e.features?.[0]?.properties;
-        if (!props?.id) return;
-        const report = reportsRef.current.find((r) => r.id === props.id);
-        if (report) onReportClick(report);
+        const clusterId = features[0]?.properties?.cluster_id;
+        if (!clusterId) return;
+        (m.getSource('reports') as mapboxgl.GeoJSONSource).getClusterLeaves(
+          clusterId, 20, 0,
+          (err, leaves) => {
+            if (err || !leaves) return;
+            const ids = leaves.map((f) => f.properties?.id as string);
+            setStackedReports(reportsRef.current.filter((r) => ids.includes(r.id)));
+          },
+        );
       });
 
       m.on('mouseenter', 'clusters', () => { m.getCanvas().style.cursor = 'pointer'; });
       m.on('mouseleave', 'clusters', () => { m.getCanvas().style.cursor = ''; });
-      m.on('mouseenter', 'unclustered-point', () => { m.getCanvas().style.cursor = 'pointer'; });
-      m.on('mouseleave', 'unclustered-point', () => { m.getCanvas().style.cursor = ''; });
     });
 
-    // Realtime subscription
+    // Realtime
     const channel = supabase
       .channel('reports-realtime')
-      .on(
-        'postgres_changes',
-        { event: 'INSERT', schema: 'public', table: 'reports' },
-        (payload) => {
-          const newReport = payload.new as Report;
-          const updated = [newReport, ...reportsRef.current];
-          reportsRef.current = updated;
-          onReportsUpdate(updated);
-          const source = map.current?.getSource('reports') as mapboxgl.GeoJSONSource | undefined;
-          source?.setData(buildGeoJSON(updated));
-        },
-      )
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'reports' }, (payload) => {
+        const newReport = payload.new as Report;
+        const updated = [newReport, ...reportsRef.current];
+        reportsRef.current = updated;
+        onReportsUpdate(updated);
+        (map.current?.getSource('reports') as mapboxgl.GeoJSONSource | undefined)
+          ?.setData(buildGeoJSON(updated));
+        if (map.current) syncMarkers(updated, map.current);
+      })
       .subscribe();
 
     return () => {
       channel.unsubscribe();
+      Object.values(markersRef.current).forEach((marker) => marker.remove());
+      markersRef.current = {};
       m.remove();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -276,9 +243,10 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
 
   useEffect(() => {
     if (!map.current?.isStyleLoaded()) return;
-    const source = map.current.getSource('reports') as mapboxgl.GeoJSONSource | undefined;
-    source?.setData(buildGeoJSON(reports));
-  }, [reports, buildGeoJSON]);
+    (map.current.getSource('reports') as mapboxgl.GeoJSONSource | undefined)
+      ?.setData(buildGeoJSON(reports));
+    syncMarkers(reports, map.current);
+  }, [reports, buildGeoJSON, syncMarkers]);
 
   return (
     <div className="relative w-full h-full">
@@ -286,21 +254,13 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
 
       {stackedReports.length > 0 && (
         <div className="absolute inset-0 z-20 flex items-end justify-center">
-          <div
-            className="absolute inset-0 bg-black/30"
-            onClick={() => setStackedReports([])}
-          />
+          <div className="absolute inset-0 bg-black/30" onClick={() => setStackedReports([])} />
           <div className="relative w-full max-w-md bg-white rounded-t-2xl shadow-2xl p-4 pb-8">
             <div className="flex items-center justify-between mb-3">
               <p className="text-sm font-semibold text-gray-700">
                 {stackedReports.length} {t('reports_at_location')}
               </p>
-              <button
-                onClick={() => setStackedReports([])}
-                className="text-gray-400 hover:text-gray-600 text-2xl leading-none"
-              >
-                ×
-              </button>
+              <button onClick={() => setStackedReports([])} className="text-gray-400 hover:text-gray-600 text-2xl leading-none">×</button>
             </div>
             <div className="space-y-2 max-h-60 overflow-y-auto">
               {stackedReports.map((r) => (
@@ -309,21 +269,14 @@ export default function Map({ reports, onReportClick, onReportsUpdate }: MapProp
                   onClick={() => { setStackedReports([]); onReportClick(r); }}
                   className="w-full flex items-center gap-3 p-2.5 rounded-xl border border-gray-100 hover:bg-gray-50 transition-colors text-left"
                 >
-                  <img
-                    src={r.photo_url}
-                    alt=""
-                    className="w-12 h-12 rounded-lg object-cover shrink-0"
-                  />
+                  <img src={r.photo_url} alt="" className="w-12 h-12 rounded-lg object-cover shrink-0" />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-medium text-gray-800">{tc(r.category)}</p>
                     <p className="text-xs text-gray-400 truncate">
                       {r.neighborhood ?? new Date(r.created_at).toLocaleDateString()}
                     </p>
                   </div>
-                  <div
-                    className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: CATEGORY_COLORS[r.category] }}
-                  />
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: CATEGORY_COLORS[r.category] }} />
                 </button>
               ))}
             </div>
