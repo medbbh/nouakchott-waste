@@ -15,6 +15,12 @@ export interface Report {
   resolve_votes: number;
 }
 
+export interface LeaderboardEntry {
+  is_me: boolean;
+  display_name: string | null;
+  report_count: number;
+}
+
 export const CATEGORY_COLORS: Record<ReportCategory, string> = {
   dump: '#C4572A',
   overflow: '#E8A838',

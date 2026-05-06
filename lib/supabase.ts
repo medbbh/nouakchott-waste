@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { Report } from '@/types';
+import { Report, LeaderboardEntry } from '@/types';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -104,6 +104,21 @@ export async function resolveVote(
   if (error) throw error;
 
   return { newCount, resolved: shouldResolve };
+}
+
+export async function fetchLeaderboard(deviceId: string | null): Promise<LeaderboardEntry[]> {
+  const { data, error } = await supabase.rpc('get_leaderboard', { p_device_id: deviceId });
+  if (error) throw error;
+  return (data ?? []) as LeaderboardEntry[];
+}
+
+export async function upsertProfile(deviceId: string, displayName: string): Promise<void> {
+  const { error } = await supabase.from('profiles').upsert({
+    device_id: deviceId,
+    display_name: displayName.trim() || null,
+    updated_at: new Date().toISOString(),
+  });
+  if (error) throw error;
 }
 
 export async function uploadPhoto(file: File, visitorId: string): Promise<string> {

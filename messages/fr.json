@@ -72,6 +72,17 @@
     "ios_step2": "Faites défiler et appuyez sur \"Sur l'écran d'accueil\"",
     "ios_step3": "Appuyez sur \"Ajouter\" pour confirmer"
   },
+  "leaderboard": {
+    "title": "Classement",
+    "subtitle": "Les plus grands reporters",
+    "you": "vous",
+    "anonymous": "Anonyme",
+    "reports": "signalements",
+    "edit_name_placeholder": "Votre pseudonyme...",
+    "save": "Sauvegarder",
+    "loading": "Chargement...",
+    "empty": "Aucun signalement pour l'instant."
+  },
   "welcome": {
     "title": "Bienvenue sur 0Déchets",
     "subtitle": "Signalez les dépôts sauvages et les poubelles pleines en Mauritanie — en quelques secondes.",

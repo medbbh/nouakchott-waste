@@ -72,6 +72,17 @@
     "ios_step2": "Scroll down and tap \"Add to Home Screen\"",
     "ios_step3": "Tap \"Add\" to confirm"
   },
+  "leaderboard": {
+    "title": "Leaderboard",
+    "subtitle": "Top reporters",
+    "you": "you",
+    "anonymous": "Anonymous",
+    "reports": "reports",
+    "edit_name_placeholder": "Your nickname...",
+    "save": "Save",
+    "loading": "Loading...",
+    "empty": "No reports yet."
+  },
   "welcome": {
     "title": "Welcome to 0Déchets",
     "subtitle": "Report illegal dumps and overflowing bins across Mauritania — in seconds.",

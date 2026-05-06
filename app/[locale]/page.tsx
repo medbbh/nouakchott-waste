@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
-import { Camera, Leaf, ArrowDown } from 'lucide-react';
+import { Camera, Leaf, ArrowDown, Trophy } from 'lucide-react';
 import { useSearchParams } from 'next/navigation';
 import { Report } from '@/types';
 import { fetchReport, fetchReports } from '@/lib/supabase';
@@ -20,6 +20,7 @@ const ReportModal = dynamic(() => import('@/components/ReportModal'), { ssr: fal
 const DetailModal = dynamic(() => import('@/components/DetailModal'), { ssr: false });
 const SharePrompt = dynamic(() => import('@/components/SharePrompt'), { ssr: false });
 const PWAInstallPrompt = dynamic(() => import('@/components/PWAInstallPrompt'), { ssr: false });
+const Leaderboard = dynamic(() => import('@/components/Leaderboard'), { ssr: false });
 
 type ReportStage = null | 'camera' | 'form';
 type PendingPhoto = { file: File; coords: { latitude: number; longitude: number } | null };
@@ -36,6 +37,7 @@ function PageContent() {
   const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [sharePromptReport, setSharePromptReport] = useState<Report | null>(null);
   const [successToast, setSuccessToast] = useState(false);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   // Pull-to-refresh
   const PULL_THRESHOLD = 72;
@@ -222,7 +224,14 @@ function PageContent() {
             </span>
           )}
         </div>
-        <div className="pointer-events-auto">
+        <div className="flex items-center gap-5 pointer-events-auto">
+          <button
+            onClick={() => setShowLeaderboard(true)}
+            className="text-white hover:text-orange-300 transition-colors"
+            aria-label="Leaderboard"
+          >
+            <Trophy size={24} strokeWidth={1.75} />
+          </button>
           <LanguageSwitcher />
         </div>
       </nav>
@@ -315,6 +324,8 @@ function PageContent() {
           onDismiss={handleSharePromptDismiss}
         />
       )}
+
+      {showLeaderboard && <Leaderboard onClose={() => setShowLeaderboard(false)} />}
 
       <WelcomeScreen />
       <PWAInstallPrompt />
