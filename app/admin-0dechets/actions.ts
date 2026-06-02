@@ -3,7 +3,7 @@
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { revalidatePath } from 'next/cache';
-import { supabaseAdmin } from '@/lib/supabaseAdmin';
+import { getSupabaseAdmin } from '@/lib/supabaseAdmin';
 import { ADMIN_COOKIE, adminToken } from './auth';
 
 const getUser = () => process.env.ADMIN_USERNAME ?? 'admin';
@@ -31,13 +31,12 @@ export async function logout() {
 }
 
 export async function deleteReport(id: string, photoUrl: string) {
+  const admin = getSupabaseAdmin();
   const match = photoUrl.match(/\/report-photos\/(.+?)(?:\?|$)/);
   if (match?.[1]) {
-    await supabaseAdmin.storage
-      .from('report-photos')
-      .remove([decodeURIComponent(match[1])]);
+    await admin.storage.from('report-photos').remove([decodeURIComponent(match[1])]);
   }
-  const { error } = await supabaseAdmin.from('reports').delete().eq('id', id);
+  const { error } = await admin.from('reports').delete().eq('id', id);
   if (error) throw error;
   revalidatePath('/admin-0dechets');
 }
