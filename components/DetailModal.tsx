@@ -83,8 +83,12 @@ export default function DetailModal({ report, onClose, onResolved }: DetailModal
         report.created_at,
         report.latitude,
         report.longitude,
+        report.description,
       );
       if (!blob) return;
+
+      const dateSlug = new Date(report.created_at).toISOString().slice(0, 10);
+      const filename = `0dechets-${report.category}-${dateSlug}-${report.id.slice(0, 8)}.jpg`;
 
       const ua = navigator.userAgent;
       const isIOS = /iPad|iPhone|iPod/.test(ua);
@@ -95,7 +99,7 @@ export default function DetailModal({ report, onClose, onResolved }: DetailModal
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'report-0dechets.jpg';
+        a.download = filename;
         a.click();
         setTimeout(() => URL.revokeObjectURL(url), 1000);
         return;
@@ -104,7 +108,7 @@ export default function DetailModal({ report, onClose, onResolved }: DetailModal
       if (isIOS && navigator.share) {
         // iOS: Web Share API → user taps "Save Image" → saved to Photos
         // No other way to reach the Photos library from a browser
-        const file = new File([blob], 'report-0dechets.jpg', { type: 'image/jpeg' });
+        const file = new File([blob], filename, { type: 'image/jpeg' });
         try {
           await navigator.share({ files: [file], title: '0Déchets' });
           return;
@@ -117,7 +121,7 @@ export default function DetailModal({ report, onClose, onResolved }: DetailModal
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'report-0dechets.jpg';
+      a.download = filename;
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch { /* image generation failed */ } finally {

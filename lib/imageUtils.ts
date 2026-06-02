@@ -92,6 +92,32 @@ function truncate(ctx: CanvasRenderingContext2D, text: string, maxWidth: number)
   return t + '…';
 }
 
+/** Wrap text into lines that fit within maxWidth. */
+function wrapText(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, maxLines: number): string[] {
+  const words = text.split(' ');
+  const lines: string[] = [];
+  let current = '';
+  let i = 0;
+  for (; i < words.length; i++) {
+    const word = words[i];
+    const test = current ? `${current} ${word}` : word;
+    if (ctx.measureText(test).width > maxWidth && current) {
+      lines.push(current);
+      current = word;
+      if (lines.length === maxLines - 1) {
+        // last allowed line — fit remaining words truncated
+        const rest = words.slice(i).join(' ');
+        lines.push(truncate(ctx, rest, maxWidth));
+        return lines;
+      }
+    } else {
+      current = test;
+    }
+  }
+  if (current) lines.push(current);
+  return lines;
+}
+
 /**
  * Render a compact shareable card.
  *
@@ -108,6 +134,7 @@ export async function generateShareImage(
   createdAt: string,
   latitude?: number,
   longitude?: number,
+  description?: string | null,
 ): Promise<Blob | null> {
   const W   = 1080;
   const PAD = 44; // horizontal padding throughout
@@ -138,10 +165,22 @@ export async function generateShareImage(
     const GAP       = 32;                   // gap between photo and text
     const LOC_SIZE  = 46;
     const DATE_SIZE = 28;
+    const DESC_SIZE = 32;
+    const DESC_LINE_H = 44;
+    const MAX_DESC_LINES = 3;
     const FOOTER_H  = 56;
     const BOT_PAD   = 32;
 
-    const H = BAR_H + TOP_PAD + PHOTO_H_CAPPED + GAP + LOC_SIZE + 12 + DATE_SIZE + GAP + FOOTER_H + BOT_PAD;
+    // Pre-measure description lines to get accurate height
+    const descLines: string[] = [];
+    if (description) {
+      ctx.font = `${DESC_SIZE}px system-ui, -apple-system, Arial, sans-serif`;
+      const lines = wrapText(ctx, description, W - PAD * 2, MAX_DESC_LINES);
+      descLines.push(...lines);
+    }
+    const DESC_BLOCK_H = descLines.length > 0 ? GAP + descLines.length * DESC_LINE_H : 0;
+
+    const H = BAR_H + TOP_PAD + PHOTO_H_CAPPED + GAP + LOC_SIZE + 12 + DATE_SIZE + DESC_BLOCK_H + GAP + FOOTER_H + BOT_PAD;
     canvas.height = H;
 
     // ── White background ───────────────────────────────────────────
@@ -218,6 +257,19 @@ export async function generateShareImage(
     ctx.font = `${DATE_SIZE}px system-ui, -apple-system, Arial, sans-serif`;
     ctx.fillStyle = '#9ca3af';
     ctx.fillText(dateStr, LOC_X, textY);
+    textY += DATE_SIZE + GAP;
+
+    // ── Description ────────────────────────────────────────────────
+    if (descLines.length > 0) {
+      ctx.font = `${DESC_SIZE}px system-ui, -apple-system, Arial, sans-serif`;
+      ctx.fillStyle = '#374151';
+      ctx.textBaseline = 'top';
+      ctx.textAlign = 'left';
+      for (const line of descLines) {
+        ctx.fillText(line, PAD, textY);
+        textY += DESC_LINE_H;
+      }
+    }
 
     // ── Footer ─────────────────────────────────────────────────────
     const FOOTER_Y = H - BOT_PAD - FOOTER_H;
