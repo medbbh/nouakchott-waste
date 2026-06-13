@@ -86,13 +86,8 @@ export default function CameraCapture({ onCapture, onClose, initialStream }: Cam
 
     let coords: { latitude: number; longitude: number } | null = null;
     try {
-      await new Promise<void>((resolve) => {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => { coords = { latitude: pos.coords.latitude, longitude: pos.coords.longitude }; resolve(); },
-          () => resolve(),
-          { enableHighAccuracy: true, timeout: 8000, maximumAge: 0 },
-        );
-      });
+      const { getCurrentPosition } = await import('@/lib/geo');
+      coords = await getCurrentPosition();
     } catch { /* non-fatal */ }
 
     const video = videoRef.current;

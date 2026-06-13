@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">0Déchets</string>
+    <string name="title_activity_main">0Déchets</string>
+    <string name="package_name">com.zdechets.app</string>
+    <string name="custom_url_scheme">com.zdechets.app</string>
+</resources>
