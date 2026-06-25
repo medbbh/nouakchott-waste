@@ -3,6 +3,7 @@ import { getMessages } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Analytics } from '@vercel/analytics/next';
 import { FingerprintProvider } from '@/context/FingerprintContext';
+import NativeInit from '@/components/NativeInit';
 
 const locales = ['en', 'fr', 'ar'];
 const APP_URL = 'https://www.0dechets.com';
@@ -69,6 +70,7 @@ export default async function LocaleLayout({ children, params }: LocaleLayoutPro
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <FingerprintProvider>
+            <NativeInit />
             {children}
           </FingerprintProvider>
         </NextIntlClientProvider>
